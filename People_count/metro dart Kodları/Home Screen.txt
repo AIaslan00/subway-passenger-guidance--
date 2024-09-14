@@ -1,0 +1,28 @@
+import 'package:flutter/material.dart';
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Metro App'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Giren: 0', style: TextStyle(fontSize: 18)),
+            Text('Çıkan: 0', style: TextStyle(fontSize: 18)),
+            Text('Vagon: 1', style: TextStyle(fontSize: 18)),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              child: Text('Dummy Veri Ekle'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

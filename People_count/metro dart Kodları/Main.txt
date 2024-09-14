@@ -1,0 +1,89 @@
+
+import 'package:flutter/material.dart';
+import 'package:metro_flutter/screen/HomeScreen.dart'; // HomeScreen dosyasını import edin
+import 'database_helper.dart'; // Veritabanı yardımcı dosyasını import edin
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Metro App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
+  int girisSayisi = 0;
+  int cikisSayisi = 0;
+  int vagonSayisi = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateData();
+  }
+
+  void _updateData() async {
+    final data = await _dbHelper.getData();
+    if (data.isNotEmpty) {
+      final latestEntry = data.last;
+      setState(() {
+        girisSayisi = latestEntry['giris_sayisi'];
+        cikisSayisi = latestEntry['cikis_sayisi'];
+        vagonSayisi = latestEntry['vagon_sayisi'];
+      });
+    }
+  }
+
+  void _insertDummyData() async {
+    await _dbHelper.insertData(girisSayisi + 1, cikisSayisi, vagonSayisi);
+    _updateData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Metro App'),
+      ),
+      body: Container( // Arka plan ekledik
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/background_image.jpg"), // Arka plan görüntüsü
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center( // Merkeze hizaladık
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Giren: $girisSayisi', style: TextStyle(fontSize: 18)),
+              Text('Çıkan: $cikisSayisi', style: TextStyle(fontSize: 18)),
+              Text('Vagon: $vagonSayisi', style: TextStyle(fontSize: 18)),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _insertDummyData,
+                child: Text('Dummy Veri Ekle'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

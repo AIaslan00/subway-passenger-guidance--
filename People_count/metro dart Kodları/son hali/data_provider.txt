@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:metroo_app/services/api_service.dart';
+
+class DataProvider with ChangeNotifier {
+  int _enteringCount = 0;
+  int _exitingCount = 0;
+  int _vagonCount = 1;
+
+  int get enteringCount => _enteringCount;
+  int get exitingCount => _exitingCount;
+  int get vagonCount => _vagonCount;
+
+  final ApiService _apiService = ApiService();
+
+  Future<void> updateData() async {
+    try {
+      final data = await _apiService.fetchData();
+      _enteringCount = data['entering_count'];
+      _exitingCount = data['exiting_count'];
+      _vagonCount = data['vagon_count'];
+      notifyListeners();
+    } catch (error) {
+      // Hata yönetimi
+      print('Error: $error');
+    }
+  }
+}
